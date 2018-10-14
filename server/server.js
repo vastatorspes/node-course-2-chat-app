@@ -23,19 +23,50 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('new user connected');
     
+    // buat user yang baru join
+    socket.emit('newMessage', {
+        from: 'Admin',
+        text: 'Welcome to the chat app',
+        createdAt: new Date().getTime()
+    });
+    
+    // user lain liat ada yg baru join
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'New User Joined',
+        createdAt: new Date().getTime()
+    });
+    
     socket.on('createMessage', (message) =>{
         console.log('New chat', message);
-        // socket.emit cuma emit event ke single connection
-        // io.emit emit event ke semua connection
-        // ini kalo ada message baru masuk ke server, server langsung emit kesemua orang
         
-        // creating the event
-        // argumen pertama nama event, argumen kedua terserah.. disini object    
-        io.emit('newMessage', {
+        //cara cara kirim message ke console
+        // #region
+//------------------------------------------------//
+        // 1. socket.emit cuma emit event ke single connection
+        /*socket.emit('newMessage', {
+            from: 'she',
+            text: 'whats up',
+            createdAt: 0
+        });*/
+//------------------------------------------------//
+        
+//------------------------------------------------//
+        // 2. io.emit emit event ke semua connection
+        /*io.emit('newMessage', {
             from: message.from,
             text: message.text,
             createdAt: new Date().getTime()
-        })
+        });*/
+//------------------------------------------------//
+        
+        // 3. send message ke semuanya kecuali ini
+        /*socket.broadcast.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });*/
+        // #endregion 
     });
     
     
