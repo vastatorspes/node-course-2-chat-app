@@ -5,10 +5,22 @@
 var socket = io();
 
 // arrow function mungkin ga jalan di mobile phone ato web browser lain. jadi pake function biasa
-/*socket.on('connect', (mauisiapabebas)=>{
-    console.log('Connected to the server') 
-});
-*/
+
+function scrollToBottom(){
+    // Selectors
+    var messages = jQuery('#messages');
+    var newMessage = messages.children('li:last-child');
+    // Heights
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight();
+    
+    if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight + 100 >= scrollHeight){
+        messages.scrollTop(scrollHeight);
+    }
+};
 
 // on => listen
 // emit => send
@@ -29,8 +41,8 @@ socket.on('newMessage', function(chat){
         from: chat.from,
         createdAt: formattedTime
     });
-    
     jQuery('#messages').append(html);
+    scrollToBottom();
     
     /*console.log('Pesan baru', chat);
     var formattedTime = moment(chat.createdAt).format('h:mm a')
@@ -49,6 +61,7 @@ socket.on('newLocationMessage', function(location){
         createdAt: formattedTime
     });
     jQuery('#messages').append(html);
+    scrollToBottom();
     
     /*var li = jQuery('<li></li>');
     var link = jQuery(`<a target="_blank">My Current Location</a>`)
