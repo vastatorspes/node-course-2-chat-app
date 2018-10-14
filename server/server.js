@@ -15,16 +15,34 @@ var io = socketIO(server);
 //middleware buat arahin static web ada di folder public
 app.use(express.static(publicPath));
 
+// on => listen
+// emit => send
+
 // io.on buat register event listener dan lakuin sesuatu waktu event terjadi
-// event yang mau kita pake connection buat listen ke new connection (client konek ke server)
+// connection argumen = build in event buat listen ke new connection (client konek ke server)
 // lalu lakuin sesuatu waktu ada connection
 io.on('connection', (socket) => {
     console.log('new user connected');
     
+    // creating the event
+    // argumen pertama nama event, argumen kedua terserah.. disini object
+
+    socket.emit('newMessage', {
+        from: 'she',
+        text: 'whats up',
+        createdAt: 0
+    })
+    
+    socket.on('createMessage', (message) =>{
+        console.log('New chat', message);
+    })
+    
+    
     // ini kalo browser / client ditutup
-    socket.on('disconnect', (terserah) =>{
+    socket.on('disconnect', () =>{
         console.log('Disonnected from the server') 
     });
+    
 });
 
 server.listen(port, ()=> {

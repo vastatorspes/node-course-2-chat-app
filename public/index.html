@@ -11,20 +11,6 @@
     <p>Welcome to the chat app</p>
     
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        // io is a method available to us becoz we alr loaded in the socket.io.js library
-        // waktu kita call function ini, kita initiating the request
-        // bikin request dari client ke server buat buka web socket dan terus buka koneksinya
-        // variable socket ini yang bakal listen data sama kirim data ke server
-        var socket = io();
-        
-        // on method sama dengan yang dipake di server.js
-        socket.on('connect', (mauisiapabebas)=>{
-            console.log('Connected to the server') 
-        });
-        socket.on('disconnect', (terserah) =>{
-            console.log('Disonnected from the server') 
-        });
-    </script>
+    <script src="/js/index.js"></script>
 </body>
 </html>
