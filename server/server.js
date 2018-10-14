@@ -3,7 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000; 
 var app = express();
@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
         //cara cara kirim message ke console
         // #region
 //------------------------------------------------//
-        // 1. socket.emit cuma emit event ke single connection
+        // 1. socket.emit cuma emit event ke single connection (diri sendiri)
         /*socket.emit('newMessage', {
             from: 'she',
             text: 'whats up',
@@ -62,6 +62,11 @@ io.on('connection', (socket) => {
             createdAt: new Date().getTime()
         });*/
         // #endregion 
+    });
+    
+    socket.on('createLocationMessage', (coords) => {
+        //io.emit('newMessage', generateMessage('Admin', `${coords.latitude}, ${coords.longitude}`))
+        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
     });
     
     
