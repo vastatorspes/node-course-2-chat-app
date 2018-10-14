@@ -20,21 +20,44 @@ socket.on('connect', function(){
 
 // waktu ada pesan masuk
 socket.on('newMessage', function(chat){
-    console.log('Pesan baru', chat);
+    // pake mustache templating
+    var formattedTime = moment(chat.createdAt).format('h:mm a')
     
+    var template = jQuery('#message-template').html();
+    var html = Mustache.render(template, {
+        text: chat.text,
+        from: chat.from,
+        createdAt: formattedTime
+    });
+    
+    jQuery('#messages').append(html);
+    
+    /*console.log('Pesan baru', chat);
+    var formattedTime = moment(chat.createdAt).format('h:mm a')
     var li = jQuery('<li></li>');
-    li.text(`${chat.from}: ${chat.text}`);
-    jQuery('#messages').append(li);
+    li.text(`${chat.from} ${formattedTime}: ${chat.text}`);
+    jQuery('#messages').append(li);*/
 });
 
 socket.on('newLocationMessage', function(location){
-    var li = jQuery('<li></li>');
-    var link = jQuery(`<a target="_blank">My Current Location</a>`)
+    // pake mustache
+    var formattedTime = moment(location.createdAt).format('h:mm a')
+    var template = jQuery('#location-message-template').html();
+    var html = Mustache.render(template, {
+        url: location.url,
+        from: location.from,
+        createdAt: formattedTime
+    });
+    jQuery('#messages').append(html);
     
-    li.text(`${location.from}: `);
+    /*var li = jQuery('<li></li>');
+    var link = jQuery(`<a target="_blank">My Current Location</a>`)
+    var formattedTime = moment(location.createdAt).format('h:mm a')
+    
+    li.text(`${location.from} ${formattedTime}: `);
     link.attr('href', location.url);
     li.append(link);
-    jQuery('#messages').append(li);
+    jQuery('#messages').append(li);*/
 });
 
 socket.on('disconnect', function(){
