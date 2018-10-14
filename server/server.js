@@ -20,22 +20,23 @@ app.use(express.static(publicPath));
 
 // io.on buat register event listener dan lakuin sesuatu waktu event terjadi
 // connection argumen = build in event buat listen ke new connection (client konek ke server)
-// lalu lakuin sesuatu waktu ada connection
 io.on('connection', (socket) => {
     console.log('new user connected');
     
-    // creating the event
-    // argumen pertama nama event, argumen kedua terserah.. disini object
-
-    socket.emit('newMessage', {
-        from: 'she',
-        text: 'whats up',
-        createdAt: 0
-    })
-    
     socket.on('createMessage', (message) =>{
         console.log('New chat', message);
-    })
+        // socket.emit cuma emit event ke single connection
+        // io.emit emit event ke semua connection
+        // ini kalo ada message baru masuk ke server, server langsung emit kesemua orang
+        
+        // creating the event
+        // argumen pertama nama event, argumen kedua terserah.. disini object    
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        })
+    });
     
     
     // ini kalo browser / client ditutup
