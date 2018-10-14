@@ -30,10 +30,11 @@ io.on('connection', (socket) => {
     // user lain liat ada yg baru join
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
     
-    socket.on('createMessage', (message) =>{
+    socket.on('createMessage', (message, callback) =>{
         console.log('New chat', message);
         
         io.emit('newMessage', generateMessage(message.from, message.text));
+        callback('This is from the server');
         //cara cara kirim message ke console
         // #region
 //------------------------------------------------//

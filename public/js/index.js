@@ -18,10 +18,26 @@ socket.on('connect', function(){
     console.log('Connected to the server');
 });
 
+// waktu ada pesan masuk
 socket.on('newMessage', function(chat){
     console.log('Pesan baru', chat);
+    
+    var li = jQuery('<li></li>');
+    li.text(`${chat.from}: ${chat.text}`);
+    jQuery('#messages').append(li);
 });
 
 socket.on('disconnect', function(){
     console.log('Disonnected from the server');
+});
+
+jQuery('#message-form').on('submit', function(e){
+    e.preventDefault();
+    
+    socket.emit('createMessage', {
+        from: 'jquery',
+        text: jQuery('[name=message]').val()
+    },function(){
+        
+    });
 });
