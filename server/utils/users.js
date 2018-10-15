@@ -1,9 +1,3 @@
-[{
-    id:'',
-    name: 'Gerry',
-    room: 'Start Up'
-}]
-
 class Users{
     constructor(){
         this.users = [];

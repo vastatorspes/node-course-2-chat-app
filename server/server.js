@@ -33,9 +33,6 @@ io.on('connection', (socket) => {
         if(!isRealString(params.name) || !isRealString(params.room)){
             return callback('Name and room name are required.');
         }
-        
-        
-        
         // join room dengan nama tersebut
         socket.join(params.room);
         users.removeUser(socket.id);
@@ -54,9 +51,13 @@ io.on('connection', (socket) => {
     });
     
     socket.on('createMessage', (message, callback) =>{
-        console.log('New chat', message);
+        var user = users.getUser(socket.id);
         
-        io.emit('newMessage', generateMessage(message.from, message.text));
+        //check if the user exists
+        if(user && isRealString(message.text)){
+            io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+        }
+        
         callback();
         //cara cara kirim message ke console
         // #region
@@ -89,7 +90,10 @@ io.on('connection', (socket) => {
     
     socket.on('createLocationMessage', (coords) => {
         //io.emit('newMessage', generateMessage('Admin', `${coords.latitude}, ${coords.longitude}`))
-        io.emit('newLocationMessage', generateLocationMessage('User', coords.latitude, coords.longitude));
+        var user = users.getUser(socket.id);
+        if(user){
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+        }
     });
     
     
