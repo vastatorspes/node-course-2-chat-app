@@ -28,7 +28,31 @@ function scrollToBottom(){
 // on method sama dengan yang dipake di server.js
 socket.on('connect', function(){
     console.log('Connected to the server');
+    var params = jQuery.deparam(window.location.search);
+    
+    // emit event join
+    socket.emit('join', params, function(err){ /*ini pass emit dia nunggu callback, kalo dpt callback berarti error*/
+        if(err){
+            alert(err);
+            window.location.href = '/';
+        }else{
+        }
+    });
 });
+
+socket.on('disconnect', function(){
+    console.log('Disonnected from the server');
+});
+
+socket.on('updateUserList', function(users){
+    var ol = jQuery('<ol></ol>');
+    
+    users.forEach(function(user){
+        ol.append(jQuery('<li></li>').text(user)) 
+    });
+    jQuery('#users').html(ol);
+});
+
 
 // waktu ada pesan masuk
 socket.on('newMessage', function(chat){
@@ -71,10 +95,6 @@ socket.on('newLocationMessage', function(location){
     link.attr('href', location.url);
     li.append(link);
     jQuery('#messages').append(li);*/
-});
-
-socket.on('disconnect', function(){
-    console.log('Disonnected from the server');
 });
 
 jQuery('#message-form').on('submit', function(e){
